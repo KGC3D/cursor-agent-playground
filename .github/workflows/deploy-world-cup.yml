@@ -1,0 +1,55 @@
+name: Deploy World Cup Tracker
+
+on:
+  push:
+    branches: [main, cursor/world-cup-tracker-43ce]
+    paths:
+      - 'world-cup-tracker/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: world-cup-tracker/package-lock.json
+
+      - name: Install dependencies
+        working-directory: world-cup-tracker
+        run: npm ci
+
+      - name: Build
+        working-directory: world-cup-tracker
+        env:
+          GITHUB_PAGES: 'true'
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: world-cup-tracker/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
