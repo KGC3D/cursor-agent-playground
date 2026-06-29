@@ -3,8 +3,19 @@ import type { Match, GroupStanding } from '../data/matches';
 import { todayIso } from '../data/matches';
 import type { BracketMatch } from '../data/bracket';
 import { fetchWorldCupData } from '../services/worldCupApi';
+import {
+  detectCurrentPhase,
+  activeLiveMatches,
+  currentPhaseResults,
+  todayInPhase,
+  upcomingByPhase,
+  groupByPhase,
+  PHASE_LABELS,
+  type TournamentPhase,
+  type PhaseSection,
+} from '../utils/tournamentPhases';
 
-const POLL_INTERVAL = 30_000; // refresh every 30s — ESPN live scores
+const POLL_INTERVAL = 30_000;
 
 export function useWorldCupData() {
   const [matches, setMatches] = useState<Match[]>([]);
@@ -37,25 +48,39 @@ export function useWorldCupData() {
 
   const today = todayIso();
 
-  const liveMatches = useMemo(
-    () => matches.filter(m => m.status === 'live' || m.status === 'halftime'),
+  const currentPhase = useMemo(
+    () => detectCurrentPhase(matches),
     [matches]
+  );
+
+  const currentPhaseLabel = PHASE_LABELS[currentPhase];
+
+  const liveMatches = useMemo(
+    () => activeLiveMatches(matches, currentPhase),
+    [matches, currentPhase]
   );
 
   const todayMatches = useMemo(
-    () => matches.filter(m => m.date === today),
-    [matches, today]
+    () => todayInPhase(matches, today, currentPhase),
+    [matches, today, currentPhase]
   );
 
-  const upcomingMatches = useMemo(
-    () => matches.filter(m => m.status === 'scheduled').sort((a, b) => (a.kickoffUtc ?? 0) - (b.kickoffUtc ?? 0)),
+  const phaseResults = useMemo(
+    () => currentPhaseResults(matches, currentPhase),
+    [matches, currentPhase]
+  );
+
+  const scheduleSections = useMemo(
+    () => upcomingByPhase(matches, currentPhase),
+    [matches, currentPhase]
+  );
+
+  const allScheduleSections = useMemo(
+    () => groupByPhase(matches.filter(m => m.status === 'scheduled')),
     [matches]
   );
 
-  const finishedMatches = useMemo(
-    () => matches.filter(m => m.status === 'finished'),
-    [matches]
-  );
+  const groupStageComplete = currentPhase !== 'group';
 
   return {
     matches,
@@ -63,11 +88,17 @@ export function useWorldCupData() {
     liveBracket,
     liveMatches,
     todayMatches,
-    upcomingMatches,
-    finishedMatches,
+    phaseResults,
+    scheduleSections,
+    allScheduleSections,
+    currentPhase,
+    currentPhaseLabel,
+    groupStageComplete,
     lastUpdated,
     loading,
     error,
     refresh,
   };
 }
+
+export type { TournamentPhase, PhaseSection };

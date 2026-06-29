@@ -8,6 +8,21 @@ import { formatMatchDate, formatKickoffTime } from './data/matches';
 import { getTeam } from './data/teams';
 import { useState } from 'react';
 
+function MatchList({ matches, compact, featured }: {
+  matches: ReturnType<typeof useWorldCupData>['matches'];
+  compact?: boolean;
+  featured?: boolean;
+}) {
+  if (matches.length === 0) return null;
+  return (
+    <div className={`match-list ${featured ? 'featured' : ''}`}>
+      {matches.map(m => (
+        <MatchCard key={m.id} match={m} compact={compact} />
+      ))}
+    </div>
+  );
+}
+
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('live');
   const {
@@ -15,8 +30,10 @@ export function App() {
     liveBracket,
     liveMatches,
     todayMatches,
-    upcomingMatches,
-    finishedMatches,
+    phaseResults,
+    scheduleSections,
+    currentPhaseLabel,
+    groupStageComplete,
     lastUpdated,
     loading,
     error,
@@ -48,6 +65,11 @@ export function App() {
   }
 
   const groupKeys = Object.keys(standings).sort();
+  const todayUpcoming = todayMatches.filter(m => m.status === 'scheduled');
+  const todayFinished = todayMatches.filter(m => m.status === 'finished');
+  const earlierPhaseResults = phaseResults.filter(
+    m => !todayFinished.some(t => t.id === m.id)
+  );
 
   return (
     <div className="app">
@@ -57,6 +79,7 @@ export function App() {
           <h1 className="app-title">World Cup 2026</h1>
           <p className="app-subtitle">USA · Canada · Mexico</p>
         </div>
+        <div className="phase-banner">{currentPhaseLabel}</div>
         {liveMatches.length > 0 && (
           <div className="live-banner">
             <span className="live-dot" />
@@ -76,73 +99,74 @@ export function App() {
             {liveMatches.length > 0 ? (
               <>
                 <h2 className="section-title">Live Now</h2>
-                <div className="match-list featured">
-                  {liveMatches.map(m => (
-                    <MatchCard key={m.id} match={m} />
-                  ))}
-                </div>
+                <p className="section-subtitle">{currentPhaseLabel}</p>
+                <MatchList matches={liveMatches} featured />
               </>
             ) : (
               <div className="empty-state">
                 <span className="empty-icon">⚽</span>
                 <p>No live matches right now</p>
+                <p className="empty-hint">{currentPhaseLabel} continues soon</p>
               </div>
             )}
 
-            {todayMatches.filter(m => m.status === 'scheduled').length > 0 && (
+            {todayUpcoming.length > 0 && (
               <>
-                <h2 className="section-title">Today</h2>
-                <div className="match-list">
-                  {todayMatches
-                    .filter(m => m.status === 'scheduled')
-                    .map(m => (
-                      <MatchCard key={m.id} match={m} compact />
-                    ))}
-                </div>
+                <h2 className="section-title">Upcoming Today</h2>
+                <p className="section-subtitle">{currentPhaseLabel}</p>
+                <MatchList matches={todayUpcoming} compact />
               </>
             )}
 
-            {todayMatches.filter(m => m.status === 'finished').length > 0 && (
+            {todayFinished.length > 0 && (
               <>
                 <h2 className="section-title">Today's Results</h2>
-                <div className="match-list">
-                  {todayMatches
-                    .filter(m => m.status === 'finished')
-                    .map(m => (
-                      <MatchCard key={m.id} match={m} compact />
-                    ))}
-                </div>
+                <p className="section-subtitle">{currentPhaseLabel}</p>
+                <MatchList matches={todayFinished} compact />
               </>
             )}
 
-            <h2 className="section-title">Recent Results</h2>
-            <div className="match-list">
-              {finishedMatches.slice(-6).reverse().map(m => (
-                <MatchCard key={m.id} match={m} compact />
-              ))}
-            </div>
+            {earlierPhaseResults.length > 0 && (
+              <>
+                <h2 className="section-title">{currentPhaseLabel} Results</h2>
+                <MatchList matches={earlierPhaseResults} compact />
+              </>
+            )}
+
+            {groupStageComplete && (
+              <p className="phase-note">
+                Group stage complete — see the Groups tab for final standings
+              </p>
+            )}
           </section>
         )}
 
         {activeTab === 'schedule' && (
           <section className="section">
-            <h2 className="section-title">Upcoming</h2>
-            <div className="match-list">
-              {upcomingMatches.map(m => (
-                <div key={m.id} className="schedule-item">
-                  <div className="schedule-date">
-                    <span className="date-day">{formatMatchDate(m.date)}</span>
-                    <span className="date-time">{formatKickoffTime(m.time)}</span>
-                  </div>
-                  <MatchCard match={m} compact />
+            {scheduleSections.map(section => (
+              <div key={section.phase} className="schedule-phase">
+                <h2 className="section-title">{section.label}</h2>
+                <div className="match-list">
+                  {section.matches.map(m => (
+                    <div key={m.id} className="schedule-item">
+                      <div className="schedule-date">
+                        <span className="date-day">{formatMatchDate(m.date)}</span>
+                        <span className="date-time">{formatKickoffTime(m.time)}</span>
+                      </div>
+                      <MatchCard match={m} compact />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </section>
         )}
 
         {activeTab === 'standings' && (
           <section className="section standings-section">
+            {groupStageComplete && (
+              <p className="phase-note">Group stage final standings</p>
+            )}
             {groupKeys.map(group => (
               <StandingsTable key={group} group={group} standings={standings[group]} />
             ))}
