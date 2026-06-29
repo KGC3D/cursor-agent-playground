@@ -1,6 +1,7 @@
 import { useWorldCupData } from './hooks/useWorldCupData';
 import { useBracketSimulator } from './hooks/useBracketSimulator';
 import { MatchCard } from './components/MatchCard';
+import { ResultsSection } from './components/ResultsSection';
 import { StandingsTable } from './components/StandingsTable';
 import { BracketView } from './components/BracketView';
 import { TabBar, type Tab } from './components/TabBar';
@@ -120,13 +121,11 @@ export function App() {
 
         {activeTab === 'schedule' && (
           <section className="section">
-            {recentResults.length > 0 && (
-              <div className="schedule-phase">
-                <h2 className="section-title">Results</h2>
-                <p className="section-subtitle">{currentPhaseLabel}</p>
-                <MatchList matches={recentResults} compact />
-              </div>
-            )}
+            <ResultsSection
+              matches={recentResults}
+              phaseLabel={currentPhaseLabel}
+              hasUpcoming={scheduleSections.length > 0}
+            />
 
             {scheduleSections.map(section => (
               <div key={section.phase} className="schedule-phase">

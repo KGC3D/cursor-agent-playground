@@ -481,6 +481,143 @@ body {
   border-color: rgba(10, 132, 255, 0.2);
 }
 
+/* Completed results — clearly distinct from upcoming */
+.results-section {
+  margin-bottom: 8px;
+}
+
+.results-section-header {
+  margin-bottom: 16px;
+}
+
+.results-section-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.results-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  background: rgba(142, 142, 147, 0.2);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.results-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.results-date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.results-date-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding-left: 4px;
+}
+
+.match-card.is-result {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(142, 142, 147, 0.18);
+  opacity: 0.88;
+  padding-top: 0;
+  overflow: hidden;
+}
+
+.result-card-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 -16px 12px;
+  padding: 8px 16px;
+  background: rgba(142, 142, 147, 0.12);
+  border-bottom: 1px solid rgba(142, 142, 147, 0.15);
+}
+
+.result-done-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.result-played-at {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.match-card.is-result .match-stage {
+  color: var(--text-tertiary);
+}
+
+.match-card.is-result .team-score {
+  font-size: 24px;
+  color: var(--text-secondary);
+}
+
+.match-card.is-result .team-row.winner .team-abbr,
+.match-card.is-result .team-row.winner .team-score {
+  color: var(--text-primary);
+}
+
+.match-card.is-result .team-row.loser {
+  opacity: 0.35;
+}
+
+.match-card.is-result .match-venue {
+  border-top-color: rgba(142, 142, 147, 0.12);
+}
+
+.match-card.is-result .match-venue.muted .venue-text {
+  color: var(--text-tertiary);
+  opacity: 0.8;
+}
+
+.status-badge.finished.final {
+  color: var(--text-secondary);
+  background: rgba(142, 142, 147, 0.22);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0 20px;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
 /* Standings */
 .standings-section {
   display: flex;
