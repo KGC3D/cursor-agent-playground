@@ -15,6 +15,9 @@ export interface Match {
   group?: string;
   venue: string;
   city: string;
+  stadium: string;
+  region?: string;
+  country: string;
   date: string;
   time: string;
   kickoffUtc?: number;

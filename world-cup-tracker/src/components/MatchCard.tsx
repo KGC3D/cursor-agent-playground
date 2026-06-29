@@ -2,6 +2,7 @@ import type { Team } from '../data/teams';
 import { getTeam } from '../data/teams';
 import type { Match, MatchStatus } from '../data/matches';
 import { formatKickoffTime } from '../data/matches';
+import { formatVenueLine } from '../data/venues';
 
 interface TeamRowProps {
   team: Team;
@@ -45,6 +46,22 @@ function StatusBadge({ status, minute, clock }: { status: MatchStatus; minute?: 
   return <span className="status-badge scheduled">{minute ? '' : 'Upcoming'}</span>;
 }
 
+function VenueMeta({ match }: { match: Match }) {
+  const line = formatVenueLine({
+    stadium: match.stadium,
+    city: match.city,
+    region: match.region,
+    country: match.country,
+  });
+
+  return (
+    <div className="match-venue">
+      <span className="venue-pin" aria-hidden>📍</span>
+      <span className="venue-text">{line}</span>
+    </div>
+  );
+}
+
 export function MatchCard({ match, compact }: MatchCardProps) {
   const home = getTeam(match.homeId);
   const away = getTeam(match.awayId);
@@ -80,17 +97,11 @@ export function MatchCard({ match, compact }: MatchCardProps) {
         />
       </div>
 
+      <VenueMeta match={match} />
+
       {isScheduled && (
         <div className="match-kickoff">
-          {formatKickoffTime(match.time)}
-        </div>
-      )}
-
-      {!compact && (
-        <div className="match-meta">
-          <span>{match.venue}</span>
-          <span className="meta-dot">·</span>
-          <span>{match.city}</span>
+          Kickoff {formatKickoffTime(match.time)}
         </div>
       )}
     </div>

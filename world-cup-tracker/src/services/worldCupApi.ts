@@ -1,6 +1,7 @@
 import type { Match, MatchStatus, GroupStanding } from '../data/matches';
 import { getTeamId } from '../data/teams';
 import type { BracketMatch } from '../data/bracket';
+import { resolveVenue } from '../data/venues';
 import { fetchEspnLiveScores, matchKey, type EspnLiveMatch } from './espnApi';
 
 const API_URL =
@@ -93,22 +94,12 @@ function parseGroup(raw: RawMatch): string | undefined {
   return m ? m[1] : undefined;
 }
 
-function parseVenue(ground: string): { venue: string; city: string } {
-  const parts = ground.split('(');
-  if (parts.length >= 2) {
-    const city = parts[parts.length - 1].replace(')', '').trim();
-    const venue = parts.slice(0, -1).join('(').replace(/\/$/, '').trim();
-    return { venue, city };
-  }
-  return { venue: ground, city: ground };
-}
-
 function rawToMatch(raw: RawMatch, index: number, now: number): Match {
   const homeId = getTeamId(raw.team1);
   const awayId = getTeamId(raw.team2);
   const status = resolveStatus(raw, now);
   const kickoffUtc = parseKickoffUtc(raw.date, raw.time);
-  const { venue, city } = parseVenue(raw.ground);
+  const venueInfo = resolveVenue(raw.ground);
 
   let homeScore = 0;
   let awayScore = 0;
@@ -140,8 +131,11 @@ function rawToMatch(raw: RawMatch, index: number, now: number): Match {
     minute: status === 'live' || status === 'halftime' ? estimateMinute(kickoffUtc, now) : undefined,
     stage: parseStage(raw),
     group: parseGroup(raw),
-    venue,
-    city,
+    venue: venueInfo.stadium,
+    city: venueInfo.city,
+    stadium: venueInfo.stadium,
+    region: venueInfo.region,
+    country: venueInfo.country,
     date: raw.date,
     time: raw.time,
     kickoffUtc,
