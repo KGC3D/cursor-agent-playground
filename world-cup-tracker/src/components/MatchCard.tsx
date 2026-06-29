@@ -26,12 +26,12 @@ interface MatchCardProps {
   compact?: boolean;
 }
 
-function StatusBadge({ status, minute }: { status: MatchStatus; minute?: number }) {
+function StatusBadge({ status, minute, clock }: { status: MatchStatus; minute?: number; clock?: string }) {
   if (status === 'live') {
     return (
       <span className="status-badge live">
         <span className="live-dot" />
-        {minute}'
+        {clock ?? (minute ? `${minute}'` : 'LIVE')}
       </span>
     );
   }
@@ -58,7 +58,7 @@ export function MatchCard({ match, compact }: MatchCardProps) {
         <span className="match-stage">
           {match.group ? `Group ${match.group}` : match.stage}
         </span>
-        <StatusBadge status={match.status} minute={match.minute} />
+        <StatusBadge status={match.status} minute={match.minute} clock={match.clock} />
       </div>
 
       <div className="match-teams">

@@ -10,6 +10,7 @@ export interface Match {
   awayScore: number;
   status: MatchStatus;
   minute?: number;
+  clock?: string;
   stage: string;
   group?: string;
   venue: string;

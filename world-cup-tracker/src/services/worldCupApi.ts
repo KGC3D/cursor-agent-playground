@@ -1,6 +1,7 @@
 import type { Match, MatchStatus, GroupStanding } from '../data/matches';
 import { getTeamId } from '../data/teams';
 import type { BracketMatch } from '../data/bracket';
+import { fetchEspnLiveScores, matchKey, type EspnLiveMatch } from './espnApi';
 
 const API_URL =
   'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json';
@@ -116,6 +117,14 @@ function rawToMatch(raw: RawMatch, index: number, now: number): Match {
   } else if (status === 'live' || status === 'halftime') {
     if (raw.score?.ht) {
       [homeScore, awayScore] = raw.score.ht;
+    } else {
+      // Derive live score from goal events when available
+      const g1 = raw.goals1?.length ?? 0;
+      const g2 = raw.goals2?.length ?? 0;
+      if (g1 > 0 || g2 > 0) {
+        homeScore = g1;
+        awayScore = g2;
+      }
     }
   }
 
@@ -266,6 +275,34 @@ export function buildLiveBracket(rawMatches: RawMatch[]): BracketMatch[] {
   return bracket;
 }
 
+function applyEspnOverlay(matches: Match[], espn: Map<string, EspnLiveMatch>): Match[] {
+  return matches.map(m => {
+    const key = matchKey(m.homeName, m.awayName);
+    const live = espn.get(key);
+    if (!live) return m;
+
+    // ESPN is authoritative for in-progress and same-day results
+    const useEspn =
+      live.status === 'live' ||
+      live.status === 'halftime' ||
+      (live.status === 'finished' && m.status !== 'finished') ||
+      (m.status === 'live' || m.status === 'halftime');
+
+    if (!useEspn) return m;
+
+    return {
+      ...m,
+      homeScore: live.homeScore,
+      awayScore: live.awayScore,
+      status: live.status,
+      minute: live.minute,
+      clock: live.displayClock,
+      venue: live.venue ?? m.venue,
+      city: live.city ?? m.city,
+    };
+  });
+}
+
 export async function fetchWorldCupData(): Promise<{
   matches: Match[];
   standings: Record<string, GroupStanding[]>;
@@ -275,10 +312,14 @@ export async function fetchWorldCupData(): Promise<{
   const res = await fetch(API_URL, { cache: 'no-store' });
   if (!res.ok) throw new Error(`Failed to fetch World Cup data: ${res.status}`);
 
-  const data: RawWorldCup = await res.json();
+  const [data, espnLive] = await Promise.all([
+    res.json() as Promise<RawWorldCup>,
+    fetchEspnLiveScores().catch(() => new Map<string, EspnLiveMatch>()),
+  ]);
   const now = Date.now();
 
-  const matches = data.matches.map((raw, i) => rawToMatch(raw, i, now));
+  let matches = data.matches.map((raw, i) => rawToMatch(raw, i, now));
+  matches = applyEspnOverlay(matches, espnLive);
   const standings = computeStandings(matches);
   const bracket = buildLiveBracket(data.matches);
 

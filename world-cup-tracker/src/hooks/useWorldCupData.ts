@@ -4,7 +4,7 @@ import { todayIso } from '../data/matches';
 import type { BracketMatch } from '../data/bracket';
 import { fetchWorldCupData } from '../services/worldCupApi';
 
-const POLL_INTERVAL = 60_000; // refresh every 60s for real-time updates
+const POLL_INTERVAL = 30_000; // refresh every 30s — ESPN live scores
 
 export function useWorldCupData() {
   const [matches, setMatches] = useState<Match[]>([]);

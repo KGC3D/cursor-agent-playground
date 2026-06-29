@@ -3,7 +3,7 @@ import { mkdir, rename } from 'fs/promises';
 import { readdir } from 'fs/promises';
 
 const OUT = '/opt/cursor/artifacts';
-const URL = 'http://localhost:5173';
+const URL = process.env.DEMO_URL || 'http://localhost:4173';
 
 async function main() {
   await mkdir(OUT, { recursive: true });
