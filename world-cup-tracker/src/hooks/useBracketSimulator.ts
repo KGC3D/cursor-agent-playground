@@ -1,24 +1,24 @@
-import { useState, useCallback } from 'react';
-import { INITIAL_BRACKET, propagateWinner, resetBracket, type BracketMatch } from '../data/bracket';
+import { useState, useCallback, useEffect } from 'react';
+import { propagateWinner, resetBracket, type BracketMatch } from '../data/bracket';
 
-export function useBracketSimulator() {
-  const [bracket, setBracket] = useState<BracketMatch[]>(
-    () => INITIAL_BRACKET.map(m => ({ ...m }))
-  );
-  const [simMode, setSimMode] = useState(true);
+export function useBracketSimulator(liveBracket: BracketMatch[]) {
+  const [simBracket, setSimBracket] = useState<BracketMatch[]>([]);
+  const [simMode, setSimMode] = useState(false);
+
+  useEffect(() => {
+    if (!simMode) return;
+    setSimBracket(liveBracket.map(m => ({ ...m, winnerId: m.winnerId ?? undefined })));
+  }, [liveBracket, simMode]);
 
   const pickWinner = useCallback((matchId: string, winnerId: string) => {
-    setBracket(prev => propagateWinner(prev, matchId, winnerId));
+    setSimBracket(prev => propagateWinner(prev, matchId, winnerId));
   }, []);
 
   const reset = useCallback(() => {
-    setBracket(resetBracket());
-  }, []);
+    setSimBracket(resetBracket(liveBracket));
+  }, [liveBracket]);
 
-  const getMatchesByRound = useCallback(
-    (round: BracketMatch['round']) => bracket.filter(m => m.round === round),
-    [bracket]
-  );
+  const bracket = simMode ? simBracket : liveBracket;
 
-  return { bracket, simMode, setSimMode, pickWinner, reset, getMatchesByRound };
+  return { bracket, simMode, setSimMode, pickWinner, reset };
 }

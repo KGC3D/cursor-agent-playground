@@ -31,7 +31,7 @@ function SlotTeam({
   }
 
   const team = getTeam(teamId);
-  const clickable = simMode && onPick;
+  const clickable = simMode && onPick && teamId && !isWinner;
 
   return (
     <button

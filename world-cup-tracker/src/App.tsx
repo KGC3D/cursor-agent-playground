@@ -1,17 +1,53 @@
-import { useLiveScores } from './hooks/useLiveScores';
+import { useWorldCupData } from './hooks/useWorldCupData';
 import { useBracketSimulator } from './hooks/useBracketSimulator';
 import { MatchCard } from './components/MatchCard';
 import { StandingsTable } from './components/StandingsTable';
 import { BracketView } from './components/BracketView';
 import { TabBar, type Tab } from './components/TabBar';
-import { GROUP_STANDINGS, formatMatchDate } from './data/matches';
+import { formatMatchDate, formatKickoffTime } from './data/matches';
 import { getTeam } from './data/teams';
 import { useState } from 'react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<Tab>('live');
-  const { liveMatches, todayMatches, upcomingMatches, finishedMatches } = useLiveScores();
-  const { bracket, simMode, setSimMode, pickWinner, reset } = useBracketSimulator();
+  const {
+    standings,
+    liveBracket,
+    liveMatches,
+    todayMatches,
+    upcomingMatches,
+    finishedMatches,
+    lastUpdated,
+    loading,
+    error,
+    refresh,
+  } = useWorldCupData();
+  const { bracket, simMode, setSimMode, pickWinner, reset } = useBracketSimulator(liveBracket);
+
+  if (loading) {
+    return (
+      <div className="app">
+        <div className="loading-screen">
+          <span className="loading-icon">⚽</span>
+          <p>Loading World Cup 2026...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app">
+        <div className="error-screen">
+          <span className="error-icon">⚠️</span>
+          <p>{error}</p>
+          <button type="button" className="retry-btn" onClick={refresh}>Retry</button>
+        </div>
+      </div>
+    );
+  }
+
+  const groupKeys = Object.keys(standings).sort();
 
   return (
     <div className="app">
@@ -26,6 +62,11 @@ export function App() {
             <span className="live-dot" />
             <span>{liveMatches.length} match{liveMatches.length > 1 ? 'es' : ''} live now</span>
           </div>
+        )}
+        {lastUpdated && (
+          <p className="last-updated">
+            Updated {lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+          </p>
         )}
       </header>
 
@@ -48,18 +89,35 @@ export function App() {
               </div>
             )}
 
-            <h2 className="section-title">Today</h2>
-            <div className="match-list">
-              {todayMatches
-                .filter(m => m.status === 'scheduled')
-                .map(m => (
-                  <MatchCard key={m.id} match={m} compact />
-                ))}
-            </div>
+            {todayMatches.filter(m => m.status === 'scheduled').length > 0 && (
+              <>
+                <h2 className="section-title">Today</h2>
+                <div className="match-list">
+                  {todayMatches
+                    .filter(m => m.status === 'scheduled')
+                    .map(m => (
+                      <MatchCard key={m.id} match={m} compact />
+                    ))}
+                </div>
+              </>
+            )}
+
+            {todayMatches.filter(m => m.status === 'finished').length > 0 && (
+              <>
+                <h2 className="section-title">Today's Results</h2>
+                <div className="match-list">
+                  {todayMatches
+                    .filter(m => m.status === 'finished')
+                    .map(m => (
+                      <MatchCard key={m.id} match={m} compact />
+                    ))}
+                </div>
+              </>
+            )}
 
             <h2 className="section-title">Recent Results</h2>
             <div className="match-list">
-              {finishedMatches.slice(-4).reverse().map(m => (
+              {finishedMatches.slice(-6).reverse().map(m => (
                 <MatchCard key={m.id} match={m} compact />
               ))}
             </div>
@@ -74,7 +132,7 @@ export function App() {
                 <div key={m.id} className="schedule-item">
                   <div className="schedule-date">
                     <span className="date-day">{formatMatchDate(m.date)}</span>
-                    <span className="date-time">{m.time}</span>
+                    <span className="date-time">{formatKickoffTime(m.time)}</span>
                   </div>
                   <MatchCard match={m} compact />
                 </div>
@@ -85,8 +143,8 @@ export function App() {
 
         {activeTab === 'standings' && (
           <section className="section standings-section">
-            {Object.entries(GROUP_STANDINGS).map(([group, standings]) => (
-              <StandingsTable key={group} group={group} standings={standings} />
+            {groupKeys.map(group => (
+              <StandingsTable key={group} group={group} standings={standings[group]} />
             ))}
           </section>
         )}
@@ -129,13 +187,13 @@ export function App() {
               onPickWinner={pickWinner}
             />
 
-            {bracket.find(m => m.id === 'b-final')?.winnerId && (
+            {bracket.find(m => m.round === 'final')?.winnerId && (
               <div className="champion-banner">
                 <span className="champion-trophy">🏆</span>
                 <h2>World Cup Champion</h2>
                 <p className="champion-name">
                   {(() => {
-                    const winnerId = bracket.find(m => m.id === 'b-final')!.winnerId!;
+                    const winnerId = bracket.find(m => m.round === 'final')!.winnerId!;
                     const t = getTeam(winnerId);
                     return `${t.flag} ${t.name}`;
                   })()}
