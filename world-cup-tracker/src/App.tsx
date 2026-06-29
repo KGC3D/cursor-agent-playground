@@ -4,7 +4,8 @@ import { MatchCard } from './components/MatchCard';
 import { StandingsTable } from './components/StandingsTable';
 import { BracketView } from './components/BracketView';
 import { TabBar, type Tab } from './components/TabBar';
-import { formatMatchDate, formatKickoffTime } from './data/matches';
+import { formatMatchDate } from './data/matches';
+import { formatScheduleMountain, formatUpdatedMountain } from './utils/timezone';
 import { getTeam } from './data/teams';
 import { useState } from 'react';
 
@@ -88,7 +89,7 @@ export function App() {
         )}
         {lastUpdated && (
           <p className="last-updated">
-            Updated {lastUpdated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+            Updated {formatUpdatedMountain(lastUpdated)} Mountain
           </p>
         )}
       </header>
@@ -147,15 +148,18 @@ export function App() {
               <div key={section.phase} className="schedule-phase">
                 <h2 className="section-title">{section.label}</h2>
                 <div className="match-list">
-                  {section.matches.map(m => (
+                  {section.matches.map(m => {
+                    const { day, time } = formatScheduleMountain(m.kickoffUtc, formatMatchDate(m.date));
+                    return (
                     <div key={m.id} className="schedule-item">
                       <div className="schedule-date">
-                        <span className="date-day">{formatMatchDate(m.date)}</span>
-                        <span className="date-time">{formatKickoffTime(m.time)}</span>
+                        <span className="date-day">{day}</span>
+                        <span className="date-time">{time}</span>
                       </div>
                       <MatchCard match={m} compact />
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}

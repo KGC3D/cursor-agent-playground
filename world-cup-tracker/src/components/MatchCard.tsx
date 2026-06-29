@@ -1,7 +1,7 @@
 import type { Team } from '../data/teams';
 import { getTeam } from '../data/teams';
 import type { Match, MatchStatus } from '../data/matches';
-import { formatKickoffTime } from '../data/matches';
+import { formatKickoffMountain } from '../utils/timezone';
 import { formatVenueLine } from '../data/venues';
 
 interface TeamRowProps {
@@ -99,9 +99,9 @@ export function MatchCard({ match, compact }: MatchCardProps) {
 
       <VenueMeta match={match} />
 
-      {isScheduled && (
+      {isScheduled && match.kickoffUtc && (
         <div className="match-kickoff">
-          Kickoff {formatKickoffTime(match.time)}
+          Kickoff {formatKickoffMountain(match.kickoffUtc)}
         </div>
       )}
     </div>
