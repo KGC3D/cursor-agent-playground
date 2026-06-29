@@ -1,10 +1,11 @@
 import type { Team } from '../data/teams';
 import { getTeam } from '../data/teams';
 import type { Match, MatchStatus } from '../data/matches';
+import { formatKickoffTime } from '../data/matches';
 
 interface TeamRowProps {
   team: Team;
-  score: number;
+  score?: number;
   isWinner?: boolean;
   isLoser?: boolean;
 }
@@ -16,7 +17,7 @@ export function TeamRow({ team, score, isWinner, isLoser }: TeamRowProps) {
         <span className="team-flag">{team.flag}</span>
         <span className="team-abbr">{team.abbr}</span>
       </div>
-      <span className="team-score">{score}</span>
+      {score !== undefined && <span className="team-score">{score}</span>}
     </div>
   );
 }
@@ -52,8 +53,11 @@ export function MatchCard({ match, compact }: MatchCardProps) {
   const homeWins = isFinished && match.homeScore > match.awayScore;
   const awayWins = isFinished && match.awayScore > match.homeScore;
 
+  const isScheduled = match.status === 'scheduled';
+  const showScores = !isScheduled;
+
   return (
-    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''}`}>
+    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''} ${isScheduled ? 'is-upcoming' : ''}`}>
       <div className="match-card-header">
         <span className="match-stage">
           {match.group ? `Group ${match.group}` : match.stage}
@@ -64,17 +68,23 @@ export function MatchCard({ match, compact }: MatchCardProps) {
       <div className="match-teams">
         <TeamRow
           team={home}
-          score={match.status === 'scheduled' ? 0 : match.homeScore}
+          score={showScores ? match.homeScore : undefined}
           isWinner={homeWins}
           isLoser={awayWins}
         />
         <TeamRow
           team={away}
-          score={match.status === 'scheduled' ? 0 : match.awayScore}
+          score={showScores ? match.awayScore : undefined}
           isWinner={awayWins}
           isLoser={homeWins}
         />
       </div>
+
+      {isScheduled && (
+        <div className="match-kickoff">
+          {formatKickoffTime(match.time)}
+        </div>
+      )}
 
       {!compact && (
         <div className="match-meta">
