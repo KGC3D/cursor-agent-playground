@@ -30,7 +30,6 @@ export function App() {
     liveBracket,
     liveMatches,
     todayMatches,
-    tomorrowMatches,
     phaseResults,
     scheduleSections,
     currentPhaseLabel,
@@ -67,10 +66,7 @@ export function App() {
 
   const groupKeys = Object.keys(standings).sort();
   const todayUpcoming = todayMatches.filter(m => m.status === 'scheduled');
-  const todayFinished = todayMatches.filter(m => m.status === 'finished');
-  const earlierPhaseResults = phaseResults.filter(
-    m => !todayFinished.some(t => t.id === m.id)
-  );
+  const recentResults = phaseResults;
 
   return (
     <div className="app">
@@ -97,61 +93,41 @@ export function App() {
       <main className="app-content">
         {activeTab === 'live' && (
           <section className="section">
-            {liveMatches.length > 0 ? (
+            {liveMatches.length > 0 && (
               <>
                 <h2 className="section-title">Live Now</h2>
-                <p className="section-subtitle">{currentPhaseLabel}</p>
                 <MatchList matches={liveMatches} featured />
               </>
-            ) : (
-              <div className="empty-state">
-                <span className="empty-icon">⚽</span>
-                <p>No live matches right now</p>
-                <p className="empty-hint">{currentPhaseLabel} continues soon</p>
-              </div>
             )}
 
             {todayUpcoming.length > 0 && (
               <>
-                <h2 className="section-title">Today</h2>
-                <p className="section-subtitle">{currentPhaseLabel}</p>
+                <h2 className="section-title">Up Next</h2>
+                <p className="section-subtitle">Today · {currentPhaseLabel}</p>
                 <MatchList matches={todayUpcoming} compact />
               </>
             )}
 
-            {tomorrowMatches.length > 0 && (
-              <>
-                <h2 className="section-title">Tomorrow</h2>
-                <p className="section-subtitle">{currentPhaseLabel}</p>
-                <MatchList matches={tomorrowMatches} compact />
-              </>
-            )}
-
-            {todayFinished.length > 0 && (
-              <>
-                <h2 className="section-title">Today's Results</h2>
-                <p className="section-subtitle">{currentPhaseLabel}</p>
-                <MatchList matches={todayFinished} compact />
-              </>
-            )}
-
-            {earlierPhaseResults.length > 0 && (
-              <>
-                <h2 className="section-title">{currentPhaseLabel} Results</h2>
-                <MatchList matches={earlierPhaseResults} compact />
-              </>
-            )}
-
-            {groupStageComplete && (
-              <p className="phase-note">
-                Group stage complete — see the Groups tab for final standings
-              </p>
+            {liveMatches.length === 0 && todayUpcoming.length === 0 && (
+              <div className="empty-state">
+                <span className="empty-icon">⚽</span>
+                <p>No matches live right now</p>
+                <p className="empty-hint">Check Schedule for upcoming fixtures</p>
+              </div>
             )}
           </section>
         )}
 
         {activeTab === 'schedule' && (
           <section className="section">
+            {recentResults.length > 0 && (
+              <div className="schedule-phase">
+                <h2 className="section-title">Results</h2>
+                <p className="section-subtitle">{currentPhaseLabel}</p>
+                <MatchList matches={recentResults} compact />
+              </div>
+            )}
+
             {scheduleSections.map(section => (
               <div key={section.phase} className="schedule-phase">
                 <h2 className="section-title">{section.label}</h2>
