@@ -245,6 +245,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 }
 
 .match-list.featured .match-card {
@@ -255,6 +256,8 @@ body {
   background: var(--bg-card);
   border-radius: var(--radius-md);
   padding: 14px 16px;
+  width: 100%;
+  box-sizing: border-box;
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
@@ -407,35 +410,46 @@ body {
   opacity: 0.5;
 }
 
-/* Schedule */
-.schedule-item {
+/* Schedule — unified full-width cards */
+.match-card.schedule {
+  width: 100%;
+}
+
+.schedule-card-header {
   display: flex;
-  gap: 12px;
-  align-items: stretch;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.schedule-date.today {
-  background: rgba(48, 209, 88, 0.12);
-  border: 1px solid rgba(48, 209, 88, 0.25);
-}
-
-.schedule-date.tomorrow {
-  background: rgba(10, 132, 255, 0.12);
-  border: 1px solid rgba(10, 132, 255, 0.25);
-}
-
-.schedule-date.today .date-day {
+.schedule-card-header.today .schedule-day {
   color: var(--accent-green);
 }
 
-.schedule-date.tomorrow .date-day {
+.schedule-card-header.tomorrow .schedule-day {
   color: var(--accent-blue);
 }
 
-.date-subday {
-  font-size: 11px;
+.schedule-day {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.schedule-subday {
+  font-size: 13px;
   color: var(--text-tertiary);
   font-weight: 500;
+}
+
+.schedule-time {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .relative-day-badge {
@@ -465,36 +479,6 @@ body {
 
 .match-card.is-tomorrow {
   border-color: rgba(10, 132, 255, 0.2);
-}
-
-.schedule-date {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-width: 64px;
-  padding: 8px;
-  background: var(--bg-secondary);
-  border-radius: var(--radius-sm);
-}
-
-.date-day {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-align: center;
-  line-height: 1.3;
-}
-
-.date-time {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-top: 2px;
-}
-
-.schedule-item .match-card {
-  flex: 1;
 }
 
 /* Standings */

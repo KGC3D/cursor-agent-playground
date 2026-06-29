@@ -4,8 +4,7 @@ import { MatchCard } from './components/MatchCard';
 import { StandingsTable } from './components/StandingsTable';
 import { BracketView } from './components/BracketView';
 import { TabBar, type Tab } from './components/TabBar';
-import { formatMatchDate } from './data/matches';
-import { formatScheduleMountain, formatUpdatedMountain } from './utils/timezone';
+import { formatUpdatedMountain } from './utils/timezone';
 import { getTeam } from './data/teams';
 import { useState } from 'react';
 
@@ -157,19 +156,9 @@ export function App() {
               <div key={section.phase} className="schedule-phase">
                 <h2 className="section-title">{section.label}</h2>
                 <div className="match-list">
-                  {section.matches.map(m => {
-                    const { day, subday, time, relative } = formatScheduleMountain(m.kickoffUtc, formatMatchDate(m.date));
-                    return (
-                    <div key={m.id} className={`schedule-item ${relative ? `is-${relative}` : ''}`}>
-                      <div className={`schedule-date ${relative ?? ''}`}>
-                        <span className="date-day">{day}</span>
-                        {subday && <span className="date-subday">{subday}</span>}
-                        <span className="date-time">{time}</span>
-                      </div>
-                      <MatchCard match={m} compact />
-                    </div>
-                    );
-                  })}
+                  {section.matches.map(m => (
+                    <MatchCard key={m.id} match={m} schedule />
+                  ))}
                 </div>
               </div>
             ))}

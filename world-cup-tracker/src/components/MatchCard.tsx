@@ -1,7 +1,7 @@
 import type { Team } from '../data/teams';
 import { getTeam } from '../data/teams';
 import type { Match, MatchStatus } from '../data/matches';
-import { formatKickoffMountain, getRelativeDay, formatRelativeDayLabel } from '../utils/timezone';
+import { formatKickoffMountain, getRelativeDay, formatRelativeDayLabel, formatScheduleMountain } from '../utils/timezone';
 import { formatVenueLine } from '../data/venues';
 
 interface TeamRowProps {
@@ -26,6 +26,7 @@ export function TeamRow({ team, score, isWinner, isLoser }: TeamRowProps) {
 interface MatchCardProps {
   match: Match;
   compact?: boolean;
+  schedule?: boolean;
 }
 
 function StatusBadge({ status, minute, clock }: { status: MatchStatus; minute?: number; clock?: string }) {
@@ -62,7 +63,7 @@ function VenueMeta({ match }: { match: Match }) {
   );
 }
 
-export function MatchCard({ match, compact }: MatchCardProps) {
+export function MatchCard({ match, compact, schedule }: MatchCardProps) {
   const home = getTeam(match.homeId);
   const away = getTeam(match.awayId);
   const isLive = match.status === 'live' || match.status === 'halftime';
@@ -74,12 +75,24 @@ export function MatchCard({ match, compact }: MatchCardProps) {
   const showScores = !isScheduled;
   const relative = getRelativeDay(match.kickoffUtc);
   const relativeLabel = formatRelativeDayLabel(relative);
+  const scheduleInfo = schedule && match.kickoffUtc
+    ? formatScheduleMountain(match.kickoffUtc)
+    : null;
 
   return (
-    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''} ${isScheduled ? 'is-upcoming' : ''} ${relative ? `is-${relative}` : ''}`}>
-      {relativeLabel && (
+    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''} ${schedule ? 'schedule' : ''} ${isScheduled ? 'is-upcoming' : ''} ${relative ? `is-${relative}` : ''}`}>
+      {scheduleInfo ? (
+        <div className={`schedule-card-header ${scheduleInfo.relative ?? ''}`}>
+          <span className="schedule-day">{scheduleInfo.day}</span>
+          {scheduleInfo.subday && (
+            <span className="schedule-subday">{scheduleInfo.subday}</span>
+          )}
+          <span className="schedule-time">{scheduleInfo.time}</span>
+        </div>
+      ) : relativeLabel ? (
         <div className={`relative-day-badge ${relative}`}>{relativeLabel}</div>
-      )}
+      ) : null}
+
       <div className="match-card-header">
         <span className="match-stage">
           {match.group ? `Group ${match.group}` : match.stage}
@@ -104,7 +117,7 @@ export function MatchCard({ match, compact }: MatchCardProps) {
 
       <VenueMeta match={match} />
 
-      {isScheduled && match.kickoffUtc && (
+      {isScheduled && match.kickoffUtc && !schedule && (
         <div className="match-kickoff">
           Kickoff {formatKickoffMountain(match.kickoffUtc)}
         </div>
