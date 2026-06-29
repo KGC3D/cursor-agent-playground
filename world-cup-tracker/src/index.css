@@ -414,6 +414,59 @@ body {
   align-items: stretch;
 }
 
+.schedule-date.today {
+  background: rgba(48, 209, 88, 0.12);
+  border: 1px solid rgba(48, 209, 88, 0.25);
+}
+
+.schedule-date.tomorrow {
+  background: rgba(10, 132, 255, 0.12);
+  border: 1px solid rgba(10, 132, 255, 0.25);
+}
+
+.schedule-date.today .date-day {
+  color: var(--accent-green);
+}
+
+.schedule-date.tomorrow .date-day {
+  color: var(--accent-blue);
+}
+
+.date-subday {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.relative-day-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.relative-day-badge.today {
+  color: var(--accent-green);
+  background: rgba(48, 209, 88, 0.15);
+}
+
+.relative-day-badge.tomorrow {
+  color: var(--accent-blue);
+  background: rgba(10, 132, 255, 0.15);
+}
+
+.match-card.is-today {
+  border-color: rgba(48, 209, 88, 0.2);
+}
+
+.match-card.is-tomorrow {
+  border-color: rgba(10, 132, 255, 0.2);
+}
+
 .schedule-date {
   display: flex;
   flex-direction: column;

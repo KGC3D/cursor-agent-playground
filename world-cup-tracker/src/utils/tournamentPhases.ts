@@ -1,4 +1,5 @@
 import type { Match } from '../data/matches';
+import { mountainDateKey, mountainTodayKey, mountainTomorrowKey } from './timezone';
 
 export type TournamentPhase =
   | 'group'
@@ -126,15 +127,35 @@ export function currentPhaseResults(
   );
 }
 
-/** Today's matches filtered to current tournament phase */
+/** Today's matches filtered to current tournament phase (Mountain Time) */
 export function todayInPhase(
   matches: Match[],
-  today: string,
   currentPhase: TournamentPhase
 ): Match[] {
+  const todayKey = mountainTodayKey();
   return sortByKickoff(
     matches.filter(
-      m => m.date === today && getMatchPhase(m) === currentPhase
+      m =>
+        getMatchPhase(m) === currentPhase &&
+        m.kickoffUtc &&
+        mountainDateKey(m.kickoffUtc) === todayKey
+    )
+  );
+}
+
+/** Tomorrow's matches in current phase (Mountain Time) */
+export function tomorrowInPhase(
+  matches: Match[],
+  currentPhase: TournamentPhase
+): Match[] {
+  const tomorrowKey = mountainTomorrowKey();
+  return sortByKickoff(
+    matches.filter(
+      m =>
+        getMatchPhase(m) === currentPhase &&
+        m.status === 'scheduled' &&
+        m.kickoffUtc &&
+        mountainDateKey(m.kickoffUtc) === tomorrowKey
     )
   );
 }

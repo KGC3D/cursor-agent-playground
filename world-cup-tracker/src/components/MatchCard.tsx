@@ -1,7 +1,7 @@
 import type { Team } from '../data/teams';
 import { getTeam } from '../data/teams';
 import type { Match, MatchStatus } from '../data/matches';
-import { formatKickoffMountain } from '../utils/timezone';
+import { formatKickoffMountain, getRelativeDay, formatRelativeDayLabel } from '../utils/timezone';
 import { formatVenueLine } from '../data/venues';
 
 interface TeamRowProps {
@@ -72,9 +72,14 @@ export function MatchCard({ match, compact }: MatchCardProps) {
 
   const isScheduled = match.status === 'scheduled';
   const showScores = !isScheduled;
+  const relative = getRelativeDay(match.kickoffUtc);
+  const relativeLabel = formatRelativeDayLabel(relative);
 
   return (
-    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''} ${isScheduled ? 'is-upcoming' : ''}`}>
+    <div className={`match-card ${isLive ? 'is-live' : ''} ${compact ? 'compact' : ''} ${isScheduled ? 'is-upcoming' : ''} ${relative ? `is-${relative}` : ''}`}>
+      {relativeLabel && (
+        <div className={`relative-day-badge ${relative}`}>{relativeLabel}</div>
+      )}
       <div className="match-card-header">
         <span className="match-stage">
           {match.group ? `Group ${match.group}` : match.stage}

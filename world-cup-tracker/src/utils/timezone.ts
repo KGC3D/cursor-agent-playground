@@ -1,5 +1,7 @@
 export const MOUNTAIN_TZ = 'America/Denver';
 
+export type RelativeDay = 'today' | 'tomorrow' | null;
+
 const timeFmt = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
   minute: '2-digit',
@@ -20,6 +22,34 @@ const dateShortFmt = new Intl.DateTimeFormat('en-US', {
   timeZone: MOUNTAIN_TZ,
 });
 
+const dateKeyFmt = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  timeZone: MOUNTAIN_TZ,
+});
+
+/** YYYY-MM-DD in Mountain Time */
+export function mountainDateKey(ms: number): string {
+  return dateKeyFmt.format(new Date(ms));
+}
+
+export function mountainTodayKey(): string {
+  return mountainDateKey(Date.now());
+}
+
+export function mountainTomorrowKey(): string {
+  return mountainDateKey(Date.now() + 86_400_000);
+}
+
+export function getRelativeDay(kickoffUtc?: number): RelativeDay {
+  if (!kickoffUtc) return null;
+  const key = mountainDateKey(kickoffUtc);
+  if (key === mountainTodayKey()) return 'today';
+  if (key === mountainTomorrowKey()) return 'tomorrow';
+  return null;
+}
+
 /** e.g. "4:30 PM MDT" */
 export function formatMountainTime(ms: number): string {
   return timeFmt.format(new Date(ms));
@@ -38,9 +68,6 @@ export function formatMountainDateShort(ms: number): string {
 /** Time only with MT label, e.g. "4:30 PM MT" */
 export function formatMountainTimeLabel(ms: number): string {
   const formatted = formatMountainTime(ms);
-  // Normalize MDT/MST to MT for consistency, or keep MDT/MST - user asked "mountain time"
-  // Using MDT/MST from Intl is more accurate; append "Mountain" is verbose.
-  // Replace MST/MDT with MT as user requested "mountain time"
   return formatted.replace(/\s(MST|MDT)$/, ' MT');
 }
 
@@ -57,18 +84,40 @@ export function formatKickoffMountain(kickoffUtc?: number, fallbackTime?: string
   return '';
 }
 
+export function formatRelativeDayLabel(relative: RelativeDay): string | null {
+  if (relative === 'today') return 'Today';
+  if (relative === 'tomorrow') return 'Tomorrow';
+  return null;
+}
+
 export function formatScheduleMountain(kickoffUtc?: number, fallbackDate?: string): {
   day: string;
+  subday?: string;
   time: string;
+  relative: RelativeDay;
 } {
   if (kickoffUtc) {
+    const relative = getRelativeDay(kickoffUtc);
+    const relativeLabel = formatRelativeDayLabel(relative);
+
     return {
-      day: formatMountainDate(kickoffUtc),
+      day: relativeLabel ?? formatMountainDate(kickoffUtc),
+      subday: relative ? formatMountainDateShort(kickoffUtc) : undefined,
       time: formatMountainTimeLabel(kickoffUtc),
+      relative,
     };
   }
   return {
     day: fallbackDate ?? '',
     time: '',
+    relative: null,
   };
+}
+
+export function isMountainToday(kickoffUtc?: number): boolean {
+  return getRelativeDay(kickoffUtc) === 'today';
+}
+
+export function isMountainTomorrow(kickoffUtc?: number): boolean {
+  return getRelativeDay(kickoffUtc) === 'tomorrow';
 }

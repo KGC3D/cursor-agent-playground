@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { Match, GroupStanding } from '../data/matches';
-import { todayIso } from '../data/matches';
 import type { BracketMatch } from '../data/bracket';
 import { fetchWorldCupData } from '../services/worldCupApi';
 import {
@@ -8,6 +7,7 @@ import {
   activeLiveMatches,
   currentPhaseResults,
   todayInPhase,
+  tomorrowInPhase,
   upcomingByPhase,
   groupByPhase,
   PHASE_LABELS,
@@ -46,8 +46,6 @@ export function useWorldCupData() {
     return () => clearInterval(interval);
   }, [refresh]);
 
-  const today = todayIso();
-
   const currentPhase = useMemo(
     () => detectCurrentPhase(matches),
     [matches]
@@ -61,8 +59,13 @@ export function useWorldCupData() {
   );
 
   const todayMatches = useMemo(
-    () => todayInPhase(matches, today, currentPhase),
-    [matches, today, currentPhase]
+    () => todayInPhase(matches, currentPhase),
+    [matches, currentPhase]
+  );
+
+  const tomorrowMatches = useMemo(
+    () => tomorrowInPhase(matches, currentPhase),
+    [matches, currentPhase]
   );
 
   const phaseResults = useMemo(
@@ -88,6 +91,7 @@ export function useWorldCupData() {
     liveBracket,
     liveMatches,
     todayMatches,
+    tomorrowMatches,
     phaseResults,
     scheduleSections,
     allScheduleSections,
