@@ -235,22 +235,39 @@
       font-weight: 600;
     }
 
-    .checklist {
+    .deliverables-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem 1.5rem;
-      list-style: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .deliverable-group {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem 1.5rem;
+      padding: 1.25rem;
+    }
+
+    .deliverable-group h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 0;
     }
 
     .checklist li {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       padding-left: 1.5rem;
       position: relative;
+      margin-bottom: 0.45rem;
     }
+
+    .checklist li:last-child { margin-bottom: 0; }
 
     .checklist li::before {
       content: '✓';
@@ -263,9 +280,8 @@
 
     @media (max-width: 768px) {
       .workstream-grid,
-      .timeline { grid-template-columns: 1fr; }
-
-      .checklist { grid-template-columns: 1fr; }
+      .timeline,
+      .deliverables-grid { grid-template-columns: 1fr; }
 
       nav ul { gap: 1.25rem; }
     }
@@ -381,16 +397,35 @@
 
   <section id="deliverables">
     <h2>Deliverables</h2>
-    <ul class="checklist">
-      <li>Convoi OS product map</li>
-      <li>Searchable Second Brain prototype</li>
-      <li>3–5 AI workflow demos</li>
-      <li>Organizer dashboard</li>
-      <li>Founder dashboard</li>
-      <li>Utah hard-tech market map</li>
-      <li>Hackathon ops prototype</li>
-      <li>90-day roadmap</li>
-    </ul>
+    <div class="deliverables-grid">
+
+      <div class="deliverable-group">
+        <h3>Second Brain + Agents</h3>
+        <ul class="checklist">
+          <li>Convoi OS product map</li>
+          <li>Searchable Second Brain prototype</li>
+          <li>3–5 AI workflow demos</li>
+        </ul>
+      </div>
+
+      <div class="deliverable-group">
+        <h3>Accelerator Experience</h3>
+        <ul class="checklist">
+          <li>Organizer dashboard</li>
+          <li>Founder dashboard</li>
+        </ul>
+      </div>
+
+      <div class="deliverable-group">
+        <h3>Hard Tech Week</h3>
+        <ul class="checklist">
+          <li>Utah hard-tech market map</li>
+          <li>Hackathon ops prototype</li>
+          <li>90-day roadmap</li>
+        </ul>
+      </div>
+
+    </div>
   </section>
 
 </main>
