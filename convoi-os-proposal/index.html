@@ -11,14 +11,12 @@
     :root {
       --bg: #0c0f14;
       --surface: #141a24;
-      --surface-2: #1a2230;
       --border: #2a3548;
       --text: #e8ecf2;
       --muted: #8b97ab;
       --accent: #c45c26;
-      --accent-soft: rgba(196, 92, 38, 0.12);
       --green: #3d9a6e;
-      --max: 900px;
+      --max: 1000px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,10 +33,19 @@
     }
 
     .hero {
-      padding: 3.5rem 1.5rem 2.5rem;
-      text-align: center;
+      padding: 3rem 1.5rem 2.5rem;
       border-bottom: 1px solid var(--border);
       background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(196, 92, 38, 0.15), transparent);
+    }
+
+    .hero-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+
+    .hero-top {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
     .hero h1 {
@@ -52,8 +59,8 @@
     .hero .subtitle {
       font-size: 1.05rem;
       color: var(--muted);
-      max-width: 520px;
-      margin: 0 auto 1.5rem;
+      max-width: 540px;
+      margin: 0 auto 1.25rem;
       line-height: 1.55;
     }
 
@@ -72,6 +79,65 @@
       font-size: 0.82rem;
       color: var(--text);
       font-weight: 500;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: left;
+    }
+
+    .hero-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+
+    .hero-card .desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      line-height: 1.45;
+    }
+
+    .hero-card .label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .checklist {
+      list-style: none;
+    }
+
+    .checklist li {
+      font-size: 0.84rem;
+      padding-left: 1.4rem;
+      position: relative;
+      margin-bottom: 0.4rem;
+    }
+
+    .checklist li:last-child { margin-bottom: 0; }
+
+    .checklist li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--green);
+      font-weight: 700;
+      font-size: 0.78rem;
     }
 
     nav {
@@ -110,7 +176,6 @@
     }
 
     section {
-      margin-bottom: 2.5rem;
       scroll-margin-top: 3.5rem;
     }
 
@@ -119,57 +184,6 @@
       font-size: 1.5rem;
       font-weight: 400;
       margin-bottom: 1rem;
-    }
-
-    .workstream-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-
-    .card h3 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      line-height: 1.35;
-    }
-
-    .card .desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 0.85rem;
-      line-height: 1.45;
-    }
-
-    .card ul {
-      list-style: none;
-      margin: 0;
-    }
-
-    .card li {
-      font-size: 0.82rem;
-      color: var(--text);
-      padding-left: 1rem;
-      position: relative;
-      margin-bottom: 0.35rem;
-    }
-
-    .card li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0.55em;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--accent);
     }
 
     .timeline {
@@ -235,53 +249,9 @@
       font-weight: 600;
     }
 
-    .deliverables-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-
-    .deliverable-group {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-
-    .deliverable-group h3 {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 0.85rem;
-      line-height: 1.35;
-    }
-
-    .checklist {
-      list-style: none;
-      margin: 0;
-    }
-
-    .checklist li {
-      font-size: 0.85rem;
-      padding-left: 1.5rem;
-      position: relative;
-      margin-bottom: 0.45rem;
-    }
-
-    .checklist li:last-child { margin-bottom: 0; }
-
-    .checklist li::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
-      color: var(--green);
-      font-weight: 700;
-      font-size: 0.8rem;
-    }
-
     @media (max-width: 768px) {
-      .workstream-grid,
-      .timeline,
-      .deliverables-grid { grid-template-columns: 1fr; }
+      .hero-grid,
+      .timeline { grid-template-columns: 1fr; }
 
       nav ul { gap: 1.25rem; }
     }
@@ -289,13 +259,52 @@
 </head>
 <body>
 
-<header class="hero">
-  <h1>Convoi OS</h1>
-  <p class="subtitle">A 30-day pilot to turn Convoi's community, accelerator, and Hard Tech Week work into a usable operating system.</p>
-  <div class="meta-pills">
-    <span class="pill">Second Brain</span>
-    <span class="pill">Founder Dashboard</span>
-    <span class="pill">Hard Tech Week</span>
+<header class="hero" id="workstreams">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <h1>Convoi OS</h1>
+      <p class="subtitle">A 30-day pilot to turn Convoi's community, accelerator, and Hard Tech Week work into a usable operating system.</p>
+      <div class="meta-pills">
+        <span class="pill">Second Brain</span>
+        <span class="pill">Founder Dashboard</span>
+        <span class="pill">Hard Tech Week</span>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+
+      <div class="hero-card">
+        <h3>Convoi Second Brain + Agents</h3>
+        <p class="desc">Organize Convoi knowledge, founder resources, notes, recordings, playbooks, and repeatable AI workflows.</p>
+        <p class="label">Deliverables</p>
+        <ul class="checklist">
+          <li>Convoi OS product map</li>
+          <li>Searchable Second Brain prototype</li>
+          <li>3–5 AI workflow demos</li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <h3>Accelerator Founder Experience</h3>
+        <p class="desc">A simple dashboard for Convoi's team and founders to track progress, blockers, resources, events, and demo readiness.</p>
+        <p class="label">Deliverables</p>
+        <ul class="checklist">
+          <li>Convoi Dashboard</li>
+          <li>Founder dashboard</li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <h3>Utah Hard Tech Week</h3>
+        <p class="desc">The first operating layer for market mapping, hackathons, challenges, teams, submissions, judges, and sponsors.</p>
+        <p class="label">Deliverables</p>
+        <ul class="checklist">
+          <li>Utah hard-tech market map</li>
+          <li>Hackathon Event Proposal</li>
+        </ul>
+      </div>
+
+    </div>
   </div>
 </header>
 
@@ -303,49 +312,10 @@
   <ul>
     <li><a href="#workstreams">Workstreams</a></li>
     <li><a href="#plan">30-Day Plan</a></li>
-    <li><a href="#deliverables">Deliverables</a></li>
   </ul>
 </nav>
 
 <main>
-
-  <section id="workstreams">
-    <h2>Workstreams</h2>
-    <div class="workstream-grid">
-
-      <div class="card">
-        <h3>Convoi Second Brain + Agents</h3>
-        <p class="desc">Organize Convoi knowledge, founder resources, notes, recordings, playbooks, and repeatable AI workflows.</p>
-        <ul>
-          <li>Searchable founder/resource knowledge base</li>
-          <li>Meeting and office-hours summaries</li>
-          <li>Investor intro and founder update drafts</li>
-          <li>Internal agent workflow library</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Accelerator Founder Experience</h3>
-        <p class="desc">Create a simple dashboard for Convoi's team and founders to track progress, blockers, resources, events, and demo readiness.</p>
-        <ul>
-          <li>Convoi Dashboard</li>
-          <li>Founder dashboard</li>
-          <li>Milestones, blockers, tasks</li>
-          <li>Demo readiness and investor asks</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Utah Hard Tech Week</h3>
-        <p class="desc">Build the first operating layer for market mapping, hackathons, challenges, teams, submissions, judges, and sponsors.</p>
-        <ul>
-          <li>Utah hard-tech market map</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
   <section id="plan">
     <h2>30-Day Plan</h2>
     <div class="timeline">
@@ -374,7 +344,7 @@
         <div class="week-label">Week 3</div>
         <h3>Build Accelerator Dashboard</h3>
         <ul>
-          <li>Organizer view</li>
+          <li>Convoi Dashboard view</li>
           <li>Founder view</li>
           <li>Progress, blockers, tasks, demo readiness</li>
         </ul>
@@ -394,39 +364,6 @@
 
     </div>
   </section>
-
-  <section id="deliverables">
-    <h2>Deliverables</h2>
-    <div class="deliverables-grid">
-
-      <div class="deliverable-group">
-        <h3>Second Brain + Agents</h3>
-        <ul class="checklist">
-          <li>Convoi OS product map</li>
-          <li>Searchable Second Brain prototype</li>
-          <li>3–5 AI workflow demos</li>
-        </ul>
-      </div>
-
-      <div class="deliverable-group">
-        <h3>Accelerator Experience</h3>
-        <ul class="checklist">
-          <li>Convoi Dashboard</li>
-          <li>Founder dashboard</li>
-        </ul>
-      </div>
-
-      <div class="deliverable-group">
-        <h3>Hard Tech Week</h3>
-        <ul class="checklist">
-          <li>Utah hard-tech market map</li>
-          <li>Hackathon Event Proposal</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
 </main>
 
 </body>
