@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convoi OS — 30-Day Pilot Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0f14;
+      --surface: #141a24;
+      --surface-2: #1a2230;
+      --border: #2a3548;
+      --text: #e8ecf2;
+      --muted: #8b97ab;
+      --accent: #c45c26;
+      --accent-soft: rgba(196, 92, 38, 0.12);
+      --green: #3d9a6e;
+      --yellow: #c9a227;
+      --max: 820px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(196, 92, 38, 0.15), transparent);
+    }
+
+    .hero .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .pill strong { color: var(--text); }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12, 15, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      overflow-x: auto;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.25rem;
+      max-width: var(--max);
+      margin: 0 auto;
+      white-space: nowrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    main {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 4rem;
+    }
+
+    h2 {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 1.75rem;
+      font-weight: 400;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1.75rem 0 0.75rem;
+      color: var(--text);
+    }
+
+    p { margin-bottom: 1rem; color: var(--text); }
+
+    .lead {
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight-box {
+      background: var(--accent-soft);
+      border: 1px solid rgba(196, 92, 38, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .highlight-box p:last-child { margin-bottom: 0; }
+
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 0.5rem 0 0.5rem 1.25rem;
+      margin: 1.5rem 0;
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    ul, ol {
+      margin: 0 0 1rem 1.25rem;
+      color: var(--text);
+    }
+
+    li { margin-bottom: 0.4rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--surface);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    tr:hover td { background: var(--surface); }
+
+    .week-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .week-card .week-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .week-card h3 { margin-top: 0; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      margin-right: 0.35rem;
+    }
+
+    .tag-low { background: rgba(61, 154, 110, 0.15); color: var(--green); }
+    .tag-med { background: rgba(201, 162, 39, 0.15); color: var(--yellow); }
+
+    .arch-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--muted);
+      margin: 1.25rem 0;
+    }
+
+    .scene {
+      background: var(--surface-2);
+      border-left: 3px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .scene strong {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--accent);
+      font-size: 0.85rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    @media (max-width: 600px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .col-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .col-card h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .price-card.featured {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .price-card .amount {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .short-version {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .short-version h2 {
+      border: none;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .talk-track {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+
+    .talk-track p {
+      margin-bottom: 1.25rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .talk-track p:last-child { margin-bottom: 0; }
+
+    .talk-track .label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+      border: none;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Strategic Pilot Proposal · June 2026</div>
+  <h1>Convoi OS</h1>
+  <p class="subtitle">An AI-native operating system for Convoi's team, accelerator founders, investors, and the Hard Tech Week ecosystem.</p>
+  <div class="meta-pills">
+    <span class="pill"><strong>$5,000</strong> · 30 days</span>
+    <span class="pill">Prepared for <strong>Trent Mano</strong></span>
+    <span class="pill"><strong>Demo-ready</strong> deliverables</span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#thesis">Thesis</a></li>
+    <li><a href="#plan">30-Day Plan</a></li>
+    <li><a href="#scope">Scope</a></li>
+    <li><a href="#deliverables">Deliverables</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#questions">Questions</a></li>
+    <li><a href="#talk-track">Talk Track</a></li>
+    <li><a href="#short">Short Version</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section id="summary">
+    <h2>1. Executive Summary</h2>
+    <p class="lead">Convoi's advantage is community — Utah focus, early founder access, events, and LP relationships. The pilot turns that advantage into software.</p>
+    <p>Convoi Ventures has a structural advantage that most pre-seed funds cannot replicate: <strong>Utah focus, community density, early founder access, high-quality events, and deep LP/founder relationships.</strong></p>
+    <p>That advantage currently lives in people's heads, Slack threads, Google Docs, event decks, and scattered recordings. It is powerful — but it does not compound at the speed Convoi is moving.</p>
+    <div class="highlight-box">
+      <p><strong>The opportunity:</strong> Turn Convoi's community advantage into software. A 30-day pilot builds <strong>Convoi OS</strong> — an AI-native operating layer for knowledge, founder workflows, dashboards, market maps, and AI agents.</p>
+    </div>
+    <h3>What Trent gets in 30 days</h3>
+    <ul>
+      <li>Working internal Second Brain with searchable founder resources, playbooks, and event materials</li>
+      <li>3–5 demoable AI workflows (meeting summaries, office-hours prep, investor intro drafts, cohort summaries)</li>
+      <li>Accelerator organizer and founder dashboard prototypes</li>
+      <li>Utah Hard Tech Week market map structure and hackathon ops prototype</li>
+      <li>Website modernization brief informed by real system architecture</li>
+      <li>A credible 90-day roadmap for what comes next</li>
+    </ul>
+  </section>
+
+  <section id="thesis">
+    <h2>2. Core Thesis</h2>
+    <p>Convoi should not just have a website or disconnected docs. Convoi should have an <strong>AI-native operating layer</strong>.</p>
+    <table>
+      <thead>
+        <tr><th>Today</th><th>With Convoi OS</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Knowledge lives in folders and memory</td><td>Knowledge is searchable, tagged, and AI-queryable</td></tr>
+        <tr><td>Founder progress is tracked ad hoc</td><td>Cohort health is visible in one dashboard</td></tr>
+        <tr><td>Event prep is manual and repetitive</td><td>AI workflows generate briefs, recaps, and follow-ups</td></tr>
+        <tr><td>Hard Tech Week ecosystem is implicit</td><td>Market map makes startups, labs, investors, and sponsors routable</td></tr>
+        <tr><td>Website reflects where Convoi was</td><td>Public site reflects what Convoi is becoming</td></tr>
+      </tbody>
+    </table>
+    <blockquote>Community is Convoi's moat. Convoi OS makes that moat operational.</blockquote>
+    <p>Convoi OS is not a CRM replacement or a full product build. It is the pilot foundation: prototypes, workflows, and architecture that prove the model before Convoi commits to production infrastructure.</p>
+  </section>
+
+  <section id="plan">
+    <h2>3. 30-Day Pilot Plan</h2>
+
+    <div class="week-card">
+      <div class="week-label">Week 1</div>
+      <h3>Discovery + System Map</h3>
+      <p>Interview Trent and team. Inventory docs, founder resources, accelerator workflows, recordings, and event materials. Map user groups and define the data model.</p>
+      <p><strong>Output:</strong> Convoi OS blueprint · product map · data model · clickable wireframe</p>
+    </div>
+
+    <div class="week-card">
+      <div class="week-label">Week 2</div>
+      <h3>Second Brain + AI Workflows</h3>
+      <p>Searchable internal knowledge base. First AI workflows:</p>
+      <ul>
+        <li>Founder meeting summary</li>
+        <li>Office-hours prep brief</li>
+        <li>Investor intro draft</li>
+        <li>Founder update draft</li>
+        <li>Cohort progress summary</li>
+        <li>Event recap generator</li>
+      </ul>
+      <p><strong>Output:</strong> Working Second Brain prototype · 3–5 demoable AI workflows</p>
+    </div>
+
+    <div class="week-card">
+      <div class="week-label">Week 3</div>
+      <h3>Accelerator Founder + Organizer Experience</h3>
+      <div class="two-col">
+        <div class="col-card">
+          <h4>Organizer Dashboard</h4>
+          <ul>
+            <li>Cohort overview</li>
+            <li>Founder progress & blockers</li>
+            <li>Milestones & demo readiness</li>
+            <li>Investor interest</li>
+            <li>Upcoming events</li>
+          </ul>
+        </div>
+        <div class="col-card">
+          <h4>Founder Dashboard</h4>
+          <ul>
+            <li>Tasks & resources</li>
+            <li>Mentor notes</li>
+            <li>Upcoming events</li>
+            <li>Demo checklist</li>
+            <li>Investor asks & uploads</li>
+          </ul>
+        </div>
+      </div>
+      <p><strong>Output:</strong> Working accelerator dashboard prototypes (organizer + founder)</p>
+    </div>
+
+    <div class="week-card">
+      <div class="week-label">Week 4</div>
+      <h3>Hard Tech Week + Public Website Direction</h3>
+      <p><strong>Market map:</strong> startups, investors, universities, labs, government/defense, manufacturers, sponsors.</p>
+      <p><strong>Hackathon ops:</strong> challenges, teams, submissions, judges, scoring, demo schedule.</p>
+      <p><strong>Website direction:</strong> updated positioning, site structure, accelerator page, Hard Tech Week page, founder application flow.</p>
+      <p><strong>Output:</strong> Hard Tech Week prototype · final demo · 90-day roadmap · website modernization brief</p>
+    </div>
+  </section>
+
+  <section id="scope">
+    <h2>4. Scope Control</h2>
+    <div class="two-col">
+      <div class="col-card">
+        <h4>Included in $5K Pilot</h4>
+        <ul>
+          <li>Working prototypes</li>
+          <li>Mock or lightweight real data</li>
+          <li>Dashboard UX</li>
+          <li>AI workflow demos</li>
+          <li>Market map structure</li>
+          <li>Website refresh strategy</li>
+          <li>Weekly check-ins</li>
+          <li>Final demo + 90-day roadmap</li>
+        </ul>
+      </div>
+      <div class="col-card">
+        <h4>Not Included (Separate Scope)</h4>
+        <ul>
+          <li>Full production auth</li>
+          <li>Full CRM replacement</li>
+          <li>Full investor portal</li>
+          <li>Full website rebuild</li>
+          <li>Deep backend automation</li>
+          <li>Legal/compliance infrastructure</li>
+        </ul>
+      </div>
+    </div>
+    <p><strong>Pilot principle:</strong> Prove the model. Ship demos. Decide what to productionize together.</p>
+  </section>
+
+  <section id="deliverables">
+    <h2>5. Deliverables Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Deliverable</th>
+          <th>Description</th>
+          <th>Week</th>
+          <th>Demo Value</th>
+          <th>Risk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Convoi OS Blueprint</td><td>System map, user groups, module architecture</td><td>1</td><td>Frames entire engagement</td><td><span class="tag tag-low">Low</span></td></tr>
+        <tr><td>Data Model</td><td>Entities, relationships, sample records</td><td>1</td><td>Grounds all prototypes</td><td><span class="tag tag-low">Low</span></td></tr>
+        <tr><td>Wireframe / Mockup</td><td>Clickable dashboard concept</td><td>1</td><td>Makes abstract concrete</td><td><span class="tag tag-low">Low</span></td></tr>
+        <tr><td>Second Brain Prototype</td><td>Searchable knowledge base</td><td>2</td><td>Immediate team utility</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>AI Workflow Library</td><td>3–5 live demo workflows</td><td>2</td><td>Highest "wow" factor</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>Organizer Dashboard</td><td>Cohort ops view for Convoi team</td><td>3</td><td>Daily-use prototype</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>Founder Dashboard</td><td>Founder-facing task + resource hub</td><td>3</td><td>Founder experience proof</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>Hard Tech Week Market Map</td><td>Ecosystem entity map</td><td>4</td><td>Strategic / partnership value</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>Hackathon Ops Prototype</td><td>Challenge → team → judge flow</td><td>4</td><td>Event execution proof</td><td><span class="tag tag-med">Med</span></td></tr>
+        <tr><td>Website Modernization Brief</td><td>Positioning, structure, page concepts</td><td>4</td><td>Bridges internal OS → public</td><td><span class="tag tag-low">Low</span></td></tr>
+        <tr><td>Final Demo + Roadmap</td><td>Integrated walkthrough + next steps</td><td>4</td><td>Close / expand decision</td><td><span class="tag tag-low">Low</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="architecture">
+    <h2>6. Product Architecture</h2>
+    <div class="arch-diagram">┌─────────────────────────────────────────────────────────────────┐
+│                        CONVOI OS                                │
+│              AI-Native Operating Layer                          │
+├─────────────┬─────────────┬─────────────┬───────────────────────┤
+│  INTERNAL   │ ACCELERATOR │  ECOSYSTEM  │      PUBLIC           │
+├─────────────┼─────────────┼─────────────┼───────────────────────┤
+│ Second Brain│ Organizer   │ Hard Tech   │ Website Refresh       │
+│ Agent       │ Dashboard   │ Week Market │ (Strategy +           │
+│ Workflow    │ Founder     │ Map         │  Wireframes)          │
+│ Library     │ Dashboard   │ Hackathon   │                       │
+│             │             │ Ops         │                       │
+├─────────────┴─────────────┴─────────────┴───────────────────────┤
+│              LP / Investor Relationship Layer                    │
+│         (intro tracking, warm paths, update drafts)              │
+└─────────────────────────────────────────────────────────────────┘</div>
+    <table>
+      <thead><tr><th>Module</th><th>Purpose</th><th>Primary Users</th></tr></thead>
+      <tbody>
+        <tr><td>Convoi Second Brain</td><td>Searchable knowledge: playbooks, notes, recordings</td><td>Convoi team</td></tr>
+        <tr><td>Agent Workflow Library</td><td>AI actions: summaries, briefs, drafts, recaps</td><td>Convoi team, mentors</td></tr>
+        <tr><td>Organizer Dashboard</td><td>Cohort health, blockers, milestones, demo readiness</td><td>Convoi team</td></tr>
+        <tr><td>Founder Dashboard</td><td>Tasks, resources, mentor notes, investor asks</td><td>Accelerator founders</td></tr>
+        <tr><td>LP/Investor Layer</td><td>Intro tracking, warm paths, update drafts</td><td>Convoi team, LPs</td></tr>
+        <tr><td>Hard Tech Week Market Map</td><td>Startups, labs, investors, sponsors</td><td>Convoi team, 47G</td></tr>
+        <tr><td>Hackathon Ops Dashboard</td><td>Challenges, teams, submissions, judges</td><td>Event organizers</td></tr>
+        <tr><td>Public Website Refresh</td><td>Updated positioning and site structure</td><td>Public, applicants</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Build order:</strong> Internal OS first → accelerator surfaces → ecosystem (Hard Tech Week) → public website informed by real system.</p>
+  </section>
+
+  <section id="demo">
+    <h2>7. Demo Narrative</h2>
+    <p class="lead">The story to tell Trent in the final demo.</p>
+
+    <div class="scene">
+      <strong>Scene 1: Monday Morning</strong>
+      Trent opens the organizer dashboard. 8 founders in cohort. Two flagged — one blocked on hiring, one demo-ready. Past notes, mentor feedback, and resources are already there. No Slack archaeology.
+    </div>
+    <div class="scene">
+      <strong>Scene 2: Office Hours</strong>
+      Founder finishes a session. Recording uploaded. Convoi OS generates a summary, extracts action items, updates blockers, suggests resources, logs an investor ask. Founder dashboard updates automatically.
+    </div>
+    <div class="scene">
+      <strong>Scene 3: Investor Intro</strong>
+      Trent needs to connect a founder with a SaaS LP. Investor intro workflow drafts a personalized email. Edit and send in 2 minutes instead of 20.
+    </div>
+    <div class="scene">
+      <strong>Scene 4: Hard Tech Week</strong>
+      Defense-tech startup needs a manufacturing partner and lab connection. Market map filters by sector. Route to the right sponsors and hackathon judges.
+    </div>
+    <div class="scene">
+      <strong>Scene 5: Demo Day</strong>
+      Cohort progress summary generated: milestones, demos, investor interest, blockers. LP update email drafted by the founder update workflow.
+    </div>
+    <blockquote>This is Convoi's community advantage, operationalized. The pilot proves it in 30 days. The 90-day roadmap scales it.</blockquote>
+  </section>
+
+  <section id="pricing">
+    <h2>8. Pricing / Engagement Structure</h2>
+    <div class="pricing-grid">
+      <div class="price-card featured">
+        <div class="week-label">Primary Option</div>
+        <div class="amount">$5,000</div>
+        <p>30-day fixed pilot</p>
+        <p><strong>$2,500</strong> upfront<br><strong>$2,500</strong> on final demo</p>
+      </div>
+      <div class="price-card">
+        <div class="week-label">Weekly</div>
+        <div class="amount">$1,250</div>
+        <p>per week × 4</p>
+      </div>
+      <div class="price-card">
+        <div class="week-label">Milestone</div>
+        <div class="amount">$5,000</div>
+        <p>$1,500 kickoff<br>$1,500 midpoint<br>$2,000 final</p>
+      </div>
+    </div>
+    <p>Simple SOW · Independent contractor / LLC · Weekly 30-min check-ins · Final demo + 90-day roadmap delivery.</p>
+    <p>Post-pilot options (outlined in roadmap): production auth, full cohort deployment, Hard Tech Week tooling, website rebuild, ongoing retainer. No obligation to continue.</p>
+  </section>
+
+  <section id="questions">
+    <h2>9. Questions to Ask Trent</h2>
+    <h3>Priority & Success</h3>
+    <ol>
+      <li>What is the highest-priority outcome after 30 days?</li>
+      <li>What would make this pilot a clear win — something you'd show an LP?</li>
+      <li>Internal OS first, or public website refresh first?</li>
+    </ol>
+    <h3>Users & Access</h3>
+    <ol start="4">
+      <li>Who are the primary users in the first 30 days?</li>
+      <li>Who signs off? Who pays?</li>
+      <li>Who on the team should I interview in Week 1?</li>
+    </ol>
+    <h3>Data & Assets</h3>
+    <ol start="7">
+      <li>What docs, recordings, and founder resources exist? Where do they live?</li>
+      <li>Existing CRM, Notion, or shared drive structure?</li>
+      <li>Real (anonymized) data for prototypes, or mock only?</li>
+    </ol>
+    <h3>Accelerator Pain</h3>
+    <ol start="10">
+      <li>Most painful today: progress tracking, mentor coordination, demo prep, or investor intros?</li>
+      <li>What does the founder experience look like today?</li>
+      <li>How many founders in current or next cohort?</li>
+    </ol>
+    <h3>Hard Tech Week</h3>
+    <ol start="13">
+      <li>Most painful: ecosystem mapping, hackathon logistics, sponsor routing, or judge coordination?</li>
+      <li>Relationship with 47G — shared tooling or Convoi-specific?</li>
+      <li>Existing list of startups, labs, investors, sponsors to seed the market map?</li>
+    </ol>
+    <h3>Technical & Legal</h3>
+    <ol start="16">
+      <li>Constraints on AI tools or data handling?</li>
+      <li>Fund/LP confidentiality requirements from day one?</li>
+    </ol>
+  </section>
+
+  <section id="talk-track">
+    <h2>10. Meeting Talk Track</h2>
+    <p class="lead">~3 minutes. Confident, founder/operator tone.</p>
+    <div class="talk-track">
+      <p><span class="label">Opening</span>"Trent — thanks for making time. I spent time on the Convoi site and our last conversation. I think there's a clear opportunity, and I want to show you something concrete, not a strategy deck."</p>
+      <p><span class="label">The problem</span>"Convoi's advantage is community — Utah focus, early founder access, LP relationships, events, the accelerator, Hard Tech Week. That advantage is real. But right now it lives in people's heads, scattered docs, and one-off workflows. It doesn't compound as fast as you're moving."</p>
+      <p><span class="label">The recommendation</span>"I see two tracks: an internal operating system and a public-facing website refresh. My recommendation is to start with the internal OS — Convoi OS — because it creates the substance. Founder workflows, cohort visibility, AI-powered summaries and briefs, Hard Tech Week ecosystem mapping. Once that exists, we refresh the website so it reflects what Convoi is becoming."</p>
+      <p><span class="label">The pilot</span>"30-day, $5K pilot. Fixed scope, deliverable-based. Week 1: discovery and blueprint. Week 2: Second Brain and AI workflows. Week 3: accelerator dashboards. Week 4: Hard Tech Week, website direction, final demo, 90-day roadmap."</p>
+      <p><span class="label">Scope control</span>"Not a full CRM, not a website rebuild, not production auth. Prototypes that prove the model. If it works, clear path to production. If not, you still have the blueprint, workflows, and roadmap."</p>
+      <p><span class="label">Close</span>"Turn Convoi's community moat into an operating system. 30 days. $5K. Demo-ready. I have a few questions to sharpen this, but that's the core pitch."</p>
+    </div>
+  </section>
+
+  <section id="short" class="short-version">
+    <h2>Short Version for Trent</h2>
+    <p><strong>The pitch:</strong> Convoi's moat is community. Convoi OS turns that into software — searchable knowledge, founder workflows, cohort dashboards, and Hard Tech Week ecosystem tools.</p>
+    <p><strong>$5,000 · 30 days · Demo-ready</strong></p>
+    <table>
+      <thead><tr><th>Week</th><th>Focus</th><th>You Get</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Discovery + System Map</td><td>Blueprint, data model, wireframes</td></tr>
+        <tr><td>2</td><td>Second Brain + AI Workflows</td><td>Knowledge base + 3–5 live AI workflows</td></tr>
+        <tr><td>3</td><td>Accelerator Dashboards</td><td>Organizer view + founder view</td></tr>
+        <tr><td>4</td><td>Hard Tech Week + Website</td><td>Market map, hackathon ops, final demo, roadmap</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Included:</strong> Prototypes, AI demos, dashboard UX, market map, website strategy brief.</p>
+    <p><strong>Not included:</strong> Full auth, CRM, investor portal, website rebuild, legal infra.</p>
+    <p><strong>Payment:</strong> $2,500 upfront · $2,500 on final demo.</p>
+    <p><strong>Why internal OS first:</strong> Creates the substance. Website should reflect what Convoi is becoming.</p>
+    <p><strong>Demo story:</strong> Office hours → summary → blockers update → resources suggested → investor ask logged → cohort visible → Hard Tech Week routes teams to partners.</p>
+    <p><strong>Next step:</strong> 30-min kickoff. Interview team, inventory assets, start Week 1.</p>
+  </section>
+
+</main>
+
+<footer>
+  Convoi OS · 30-Day Pilot Proposal · Prepared for Convoi Ventures · June 2026
+</footer>
+
+</body>
+</html>
